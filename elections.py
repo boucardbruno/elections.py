@@ -1,4 +1,3 @@
-
 class Elections(object):
     votes_with_districts: {}
 
@@ -45,28 +44,29 @@ class Elections(object):
                     district_votes[len(self.candidates) - 1] \
                         = district_votes[len(self.candidates) - 1] + 1
 
+    @property
     def results(self):
         results = {}
         nb_votes = 0
-        nullVotes = 0
-        blankVotes = 0
-        nbValidVotes = 0
+        null_votes = 0
+        blank_votes = 0
+        nb_valid_votes = 0
         if not self.with_district:
             nb_votes = sum([vote for vote in self.votes_without_districts])
             for index in range(0, len(self.official_candidates)):
                 index = self.candidates.index(self.official_candidates[index])
-                nbValidVotes += self.votes_without_districts[index]
+                nb_valid_votes += self.votes_without_districts[index]
 
             for index in range(0, len(self.votes_without_districts)):
-                candidateResult = self.votes_without_districts[index] * 100 / nbValidVotes
+                candidate_result = self.votes_without_districts[index] * 100 / nb_valid_votes
                 candidate = self.candidates[index]
                 if self.official_candidates.__contains__(candidate):
-                    results[candidate] = "{:.2f}%".format(candidateResult).replace(".", ",")
+                    results[candidate] = "{:.2f}%".format(candidate_result).replace(".", ",")
                 else:
                     if self.candidates[index] == '':
-                        blankVotes += self.votes_without_districts[index]
+                        blank_votes += self.votes_without_districts[index]
                     else:
-                        nullVotes += self.votes_without_districts[index]
+                        null_votes += self.votes_without_districts[index]
 
         else:
             for key, value in self.votes_with_districts.items():
@@ -77,7 +77,7 @@ class Elections(object):
                 index = self.candidates.index(self.official_candidates[index])
                 for key, value in self.votes_with_districts.items():
                     district_votes = value
-                    nbValidVotes += district_votes[index]
+                    nb_valid_votes += district_votes[index]
 
             official_candidates_result = {}
 
@@ -88,17 +88,17 @@ class Elections(object):
                 district_result = []
                 districtVotes = value
                 for index in range(0, len(districtVotes)):
-                    candidateResult = 0.0
-                    if nbValidVotes != 0:
-                        candidateResult = districtVotes[index] * 100 / nbValidVotes
+                    candidate_result = 0.0
+                    if nb_valid_votes != 0:
+                        candidate_result = districtVotes[index] * 100 / nb_valid_votes
                     candidate = self.candidates[index]
                     if candidate in self.official_candidates:
-                        district_result.append(candidateResult)
+                        district_result.append(candidate_result)
                     else:
                         if candidate == "":
-                            blankVotes += districtVotes[index]
+                            blank_votes += districtVotes[index]
                         else:
-                            nullVotes += districtVotes[index]
+                            null_votes += districtVotes[index]
                 district_winner_index = 0
                 for index in range(1, len(district_result)):
                     if district_result[district_winner_index] < district_result[index]:
@@ -112,10 +112,10 @@ class Elections(object):
                     official_candidates_result) * 100
                 results[self.candidates[index]] = "{:.2f}%".format(ratioCandidate).replace(".", ",")
 
-        blank_result = blankVotes * 100 / nb_votes
+        blank_result = blank_votes * 100 / nb_votes
         results["Blank"] = "{:.2f}%".format(blank_result).replace(".", ",")
 
-        null_result = nullVotes * 100 / nb_votes
+        null_result = null_votes * 100 / nb_votes
         results["Null"] = "{:.2f}%".format(null_result).replace(".", ",")
 
         nb_electors = sum(([len(v) for k, v in self.districts.items()]))

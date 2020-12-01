@@ -26,7 +26,7 @@ class ElectionShould(unittest.TestCase):
         elections.vote_for('Simon', '', 'District 2')
         elections.vote_for('Carole', '', 'District 3')
 
-        results = elections.results()
+        results = elections.results
 
         expected_results = {
             'Jerry': '50,00%',
@@ -60,7 +60,7 @@ class ElectionShould(unittest.TestCase):
         elections.vote_for('Simon', '', 'District 2')
         elections.vote_for('Carole', '', 'District 3')
 
-        results = elections.results()
+        results = elections.results
 
         expected_results = {
             'Jerry': '66,67%',
